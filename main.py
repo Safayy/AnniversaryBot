@@ -2,10 +2,19 @@ import datetime
 import random
 import discord
 from discord import app_commands
+import json
+import sys
+import os
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
+
+if not os.path.isfile(f"{os.path.realpath(os.path.dirname(__file__))}/config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
+else:
+    with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
+        config = json.load(file)
 
 # @tree.command(name = "setup", description = "Setup tool (Future) ", guild=discord.Object(id=965005898319802409))
 # async def first_command(interaction):
@@ -42,7 +51,7 @@ async def first_command(interaction):
     next_april_1st = datetime.datetime(current_date.year + 1, 4, 1) if current_date.month >= 4 else datetime.datetime(current_date.year, 4, 1)
     days = (next_april_1st - current_date).days
     embed = discord.Embed(title="Anniversary is on", color=0xFFFFFF)
-    embed.add_field(name="", value="2023-05-04")
+    embed.add_field(name="", value=next_april_1st.date())
     embed.add_field(name=f'', value="")
     embed.add_field(name=f'In {days} days!', value="")
     
@@ -58,4 +67,4 @@ async def on_ready():
 async def on_message(message):
     print(f'{message.content}')
 
-client.run("MTEwMzMwMDk4MTczMjY3NTY0NQ.GZ5Xpe.msnAsB8f4f7g8StrmUgu8Z3HLB86KauBNo4Dgk")
+client.run(config["token"])
